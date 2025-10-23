@@ -97,4 +97,5 @@ print(response.json()['choices'][0]['message']['content'])
 - Test the port: `Test-NetConnection 169.230.30.101 -Port 11434` (Windows PowerShell)
 
 **Need help?**
-Contact the system administrator.
+Contact me (Youssef)
+
