@@ -22,9 +22,13 @@ curl http://169.230.30.101:11434/v1/models
 $body = @{
   model = "gpt-oss:120b"
   messages = @(@{role="user"; content="Your question here"})
+  stream = $false
 } | ConvertTo-Json -Depth 5
 
-Invoke-RestMethod -Uri "http://169.230.30.101:11434/v1/chat/completions" -Method POST -ContentType "application/json" -Body $body
+$response = Invoke-RestMethod -Uri "http://169.230.30.101:11434/v1/chat/completions" -Method POST -ContentType "application/json" -Body $body
+
+# Print the response in terminal
+$response.choices[0].message.content
 ```
 
 ---
@@ -42,7 +46,19 @@ curl -X POST http://169.230.30.101:11434/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-oss:120b",
-    "messages": [{"role": "user", "content": "Your question here"}]
+    "messages": [{"role": "user", "content": "Your question here"}],
+    "stream": false
+  }' | jq -r '.choices[0].message.content'
+```
+
+**Without jq (raw JSON output):**
+```bash
+curl -X POST http://169.230.30.101:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-oss:120b",
+    "messages": [{"role": "user", "content": "Your question here"}],
+    "stream": false
   }'
 ```
 
@@ -59,11 +75,16 @@ response = requests.post(
     f"{base_url}/chat/completions",
     json={
         "model": "gpt-oss:120b",
-        "messages": [{"role": "user", "content": "Your question here"}]
+        "messages": [{"role": "user", "content": "Your question here"}],
+        "stream": False
     }
 )
 
-print(response.json())
+# Print just the response text
+print(response.json()['choices'][0]['message']['content'])
+
+# Or print the full JSON response
+# print(response.json())
 ```
 
 ---
